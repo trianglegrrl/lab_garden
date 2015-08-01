@@ -80,7 +80,7 @@ void loop() {
   // Water the garden if there's water in the reservoir and if the moisture content
   // isn't high enough.
   if (reservoirStatus > MINIMUM_RESERVOIR_LEVEL) {
-    if ((soilMoisture < MINIMUM_SOIL_MOISTURE_LEVEL) || (doWatering > 100)) {
+    if (soilMoisture < MINIMUM_SOIL_MOISTURE_LEVEL) {
       digitalWrite(PUMP_RELAY_PIN, HIGH);
       delay(SECONDS_TO_RUN_PUMP * 1000); // Convert to milliseconds for delay
     }
