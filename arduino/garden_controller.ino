@@ -68,7 +68,7 @@ void loop() {
 
   // Report status in JSON format on serial port
   JsonObject& root = jsonBuffer.createObject();
-  Serial.print("|soilMoisture=");
+  Serial.print("soilMoisture=");
   Serial.print(soilMoisture, DEC);
   Serial.print("|reservoirStatus=");
   Serial.print(reservoirStatus, DEC);
@@ -76,8 +76,7 @@ void loop() {
   Serial.print(tempC, DEC);
   Serial.print("|humidity=");
   Serial.print(humidity, DEC);
-  Serial.print(soilMoisture, DEC);
-  Serial.println("|");
+  Serial.println();
 
   // Water the garden if there's water in the reservoir and if the moisture content
   // isn't high enough.
