@@ -9,10 +9,10 @@ SCHEDULER.every '5s', :first_in => 0 do |job|
 
   if arduino_values
     puts "sending events"
-    send_event('soilMoisture', { value: arduino_values['soilMoisture'].to_i }) if arduino_values['soilMoisture']
-    send_event('reservoirStatus', { value: arduino_values['reservoirStatus'].to_i }) if arduino_values['reservoirStatus'] 
-    send_event('tempC', { value: arduino_values['tempC'].to_f }) if arduino_values['tempC']
-    send_event('humidity', { value: arduino_values['humidity'].to_f }) if arduino_values['humidity']
+    send_event('soilMoisture', { value: arduino_values['soilMoisture'].to_i })
+    send_event('reservoirStatus', { value: arduino_values['reservoirStatus'].to_i })
+    send_event('tempC', { value: arduino_values['tempC'].to_f })
+    send_event('humidity', { value: arduino_values['humidity'].to_f })
   end
 end
 
@@ -30,7 +30,7 @@ module GardenArduino
 
     values = line.split("|").compact
 
-    values.map do |v| 
+    values.map do |v|
       key_value = v.split '='
       return_hash[key_value[0]] = key_value[1]
     end

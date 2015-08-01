@@ -5,15 +5,6 @@
       <div data-id="welcome" data-view="Text" data-title="Innovation Lab Dashboard" data-text="Innovation Lab Status." data-moreinfo="Started at the garden now we're here."></div>
     </li>
 
-<!--     <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-      <div data-id="synergy" data-view="Meter" data-title="Synergy" data-min="0" data-max="100"></div>
-    </li>
-
-    <li data-row="1" data-col="1" data-sizex="1" data-sizey="2">
-      <div data-id="buzzwords" data-view="List" data-unordered="true" data-title="Buzzwords" data-moreinfo="# of times said around the office"></div>
-    </li>
- -->
-
     <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
       <div data-id="soilMoisture" data-view="Text" data-title="Soil Moisture"></div>
     </li>
@@ -27,12 +18,9 @@
     </li>
 
     <li data-row="1" data-col="1" data-sizex="1" data-sizey="1">
-      <div data-id="humidity" data-view="Text" data-title="Humidity"></div>
+      <div data-id="humidity" data-view="Number" data-title="Humidity" data-moreinfo="Sensor" data-suffix="%"></div>
     </li>
-<!--
-    <li data-row="1" data-col="1" data-sizex="2" data-sizey="1">
-      <div data-id="convergence" data-view="Graph" data-title="Convergence" style="background-color:#ff9618"></div>
-    </li> -->
   </ul>
+
   <center><div style="font-size: 12px">Try this: curl -d '{ "auth_token": "YOUR_AUTH_TOKEN", "text": "Hey, Look what I can do!" }' \http://<%=request.host%>:<%=request.port%>/widgets/welcome</div></center>
 </div>
