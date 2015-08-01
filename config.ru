@@ -1,6 +1,6 @@
 require 'dashing'
 
-Dir["#{File.dirname(__FILE__)}/**/*.rb"].each { |f| require f }
+Dir["#{File.dirname(__FILE__)}/interactions/*.rb"].each { |f| require f }
 
 configure do
   set :auth_token, 'YOUR_AUTH_TOKEN'
