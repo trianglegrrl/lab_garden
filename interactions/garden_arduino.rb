@@ -1,20 +1,18 @@
 require "json"
-require "artoo-raspi"
 
 module GardenArduino
-  STATUS_REQUEST_PIN = 5 # The pin that gets raised when you need a status reported from the Arduino
-  WATERING_PIN = 10 # The pin that gets raised to do the watering
-
-  def report_sensor_data
-    values = ask_arduino_for_data
+  def current_arduino_data
+    ask_arduino_for_data
   end
 
   def ask_arduino_for_data
-    raise_pin STATUS_REQUEST_PIN
+    json = false
 
-    values = JSON.parse(read_from_serial_port)
+    while !json
+      json = JSON.parse(read_from_serial_port)
+    end
 
-    lower_pin STATUS_REQUEST_PIN
+    json
   end
 
   private
@@ -26,14 +24,6 @@ module GardenArduino
     parity = SerialPort::NONE
 
     @serial_port ||= SerialPort.new(serial_device, baud_rate, data_bits, stop_bits, parity)
-  end
-
-  def raise_pin(pin)
-    # Do the thing that raises the pin
-  end
-
-  def lower_pin(pin)
-    # Do the thing that lowers the pin
   end
 
   def read_from_serial_port
@@ -54,13 +44,5 @@ module GardenArduino
         return device_name
       end
     end
-  end
-
-  def start_watering
-    raise_pin WATERING_PIN
-  end
-
-  def end_watering
-    lower_pin WATERING_PIN
   end
 end

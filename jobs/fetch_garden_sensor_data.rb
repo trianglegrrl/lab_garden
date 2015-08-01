@@ -1,23 +1,13 @@
-# :first_in sets how long it takes before the job is first run. In this case, it is run immediately
+require "artoo-pi"
+
 SCHEDULER.every '1m', :first_in => 0 do |job|
-  send_event('widget_id', { })
+  arduino_values = GardenArduino.current_arduino_data
+
+  if arduino_values
+    send_event 'soil_moisture', { value: arduino_values['soilMoisture'] }
+    send_event 'reservoir_status', { value: arduino_values['reservoirStatus'] }
+    send_event 'temp_c', { value: arduino_values['temp_c'] }
+    send_event 'humidity', { value: arduino_values['humidity'] }
+  end
 end
 
-def get_sensor_data
-  ask_arduino_for_data
-
-end
-
-def ask_arduino_for_data
-  raise_signal_pin
-  read_from_serial_port
-  lower_signal_pin
-end
-
-def raise_signal_pin
-end
-
-def lower_signal_pin
-end
-
-def read_from_serial_port
