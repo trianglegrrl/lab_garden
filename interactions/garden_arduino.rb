@@ -1,7 +1,10 @@
 require "json"
-
+require 'pry'
 module GardenArduino
+  extend self
+
   def current_arduino_data
+    binding.pry
     ask_arduino_for_data
   end
 
