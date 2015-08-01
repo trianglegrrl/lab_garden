@@ -1,14 +1,18 @@
 require 'json'
 require 'pry'
 require 'serialport'
-SCHEDULER.every '1m', :first_in => 0 do |job|
+
+SCHEDULER.every '5s', :first_in => 0 do |job|
   arduino_values = GardenArduino.current_arduino_data
 
+  puts arduino_values
+
   if arduino_values
-    send_event 'soil_moisture', { value: arduino_values['soilMoisture'] }
-    send_event 'reservoir_status', { value: arduino_values['reservoirStatus'] }
-    send_event 'temp_c', { value: arduino_values['temp_c'] }
-    send_event 'humidity', { value: arduino_values['humidity'] }
+    puts "sending events"
+    send_event('soilMoisture', { value: arduino_values['soilMoisture'].to_i }) if arduino_values['soilMoisture']
+    send_event('reservoirStatus', { value: arduino_values['reservoirStatus'].to_i }) if arduino_values['reservoirStatus'] 
+    send_event('tempC', { value: arduino_values['tempC'].to_f }) if arduino_values['tempC']
+    send_event('humidity', { value: arduino_values['humidity'].to_f }) if arduino_values['humidity']
   end
 end
 
@@ -16,18 +20,22 @@ module GardenArduino
   extend self
 
   def current_arduino_data
-    binding.pry
     ask_arduino_for_data
   end
 
   def ask_arduino_for_data
-    json = false
+    return_hash = Hash.new
 
-    while !json
-      json = JSON.parse(read_from_serial_port)
+    line = read_from_serial_port
+
+    values = line.split("|").compact
+
+    values.map do |v| 
+      key_value = v.split '='
+      return_hash[key_value[0]] = key_value[1]
     end
 
-    json
+    return_hash
   end
 
   private
@@ -42,14 +50,9 @@ module GardenArduino
   end
 
   def read_from_serial_port
-    waiting_for_data = true
+    serial_port.flush_input
 
-    while waiting_for_data do
-      line = serial_port.gets.chomp
-      waiting_for_data = true if line
-    end
-
-    line
+    serial_port.gets.chomp
   end
 
   def serial_device
