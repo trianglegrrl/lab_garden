@@ -9,10 +9,24 @@ SCHEDULER.every '5s', :first_in => 0 do |job|
 
   if arduino_values
     puts "sending events"
-    send_event('soilMoisture', { value: arduino_values['soilMoisture'].to_i })
-    send_event('reservoirStatus', { value: arduino_values['reservoirStatus'].to_i })
-    send_event('tempC', { value: arduino_values['tempC'].to_f })
-    send_event('humidity', { value: 55 })
+    
+    soil_moisture = arduino_values['soilMoisture'].to_i
+    
+    if soil_moisture
+      needs_water = soil_moisture < 100 ? "I'm thirsty!" : "Happy!"
+      send_event('soilMoisture', { text: needs_water })
+    end
+
+    reservoir_status = arduino_values['reservoirStatus'].to_i
+    
+    if reservoir_status
+      reservoir_full = reservoir_status < 100 ? "Empty" : "Full"
+      send_event('reservoirStatus', { text: reservoir_full })
+    end
+
+    send_event('tempC', { current: arduino_values['tempC'].to_f.round(1) })
+
+    send_event('humidity', { current: arduino_values['humidity'].to_i }) if arduino_values['humidity']
   end
 end
 
