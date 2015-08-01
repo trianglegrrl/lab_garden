@@ -12,7 +12,7 @@ SCHEDULER.every '5s', :first_in => 0 do |job|
     send_event('soilMoisture', { value: arduino_values['soilMoisture'].to_i })
     send_event('reservoirStatus', { value: arduino_values['reservoirStatus'].to_i })
     send_event('tempC', { value: arduino_values['tempC'].to_f })
-    send_event('humidity', { value: arduino_values['humidity'].to_f })
+    send_event('humidity', { value: 55 })
   end
 end
 
