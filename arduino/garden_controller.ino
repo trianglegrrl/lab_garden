@@ -1,4 +1,3 @@
-
 #include <SHT1x.h> // Temp/humidity sensor
 #include <ArduinoJson.h> // Format nice JSON output from the Arduino
 
@@ -36,6 +35,9 @@
 #define SHT1X_CLOCK_PIN 11
 SHT1x sht1x(SHT1X_DATA_PIN, SHT1X_CLOCK_PIN);
 
+// Use JSON data format for communication with Raspberry Pi
+StaticJsonBuffer<200> jsonBuffer;
+
 /*
  * Arduino `setup()`; runs after power-on/reset
  */
@@ -51,9 +53,6 @@ void setup() {
  */
 
 void loop() {
-  // Use JSON data format for communication with Raspberry Pi
-  StaticJsonBuffer<200> jsonBuffer;
-
   float tempC;
   float tempF;
   float humidity;
@@ -69,13 +68,16 @@ void loop() {
 
   // Report status in JSON format on serial port
   JsonObject& root = jsonBuffer.createObject();
-  root["soilMoisture"] = soilMoisture;
-  root["reservoirStatus"] = reservoirStatus;
-  root["tempC"] = tempC;
-  root["humidity"] = humidity;
-
-  root.printTo(Serial);
-  Serial.println();
+  Serial.print("|soilMoisture=");
+  Serial.print(soilMoisture, DEC);
+  Serial.print("|reservoirStatus=");
+  Serial.print(reservoirStatus, DEC);
+  Serial.print("|tempC=");
+  Serial.print(tempC, DEC);
+  Serial.print("|humidity=");
+  Serial.print(humidity, DEC);
+  Serial.print(soilMoisture, DEC);
+  Serial.println("|");
 
   // Water the garden if there's water in the reservoir and if the moisture content
   // isn't high enough.
@@ -88,6 +90,4 @@ void loop() {
       digitalWrite(PUMP_RELAY_PIN, LOW);
     }
   }
-
-  delay(SECONDS_TO_SLEEP_BEFORE_ANOTHER_CHECK * 1000);
 }
