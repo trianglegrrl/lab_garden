@@ -1,5 +1,3 @@
-require "artoo-pi"
-
 SCHEDULER.every '1m', :first_in => 0 do |job|
   arduino_values = GardenArduino.current_arduino_data
 
