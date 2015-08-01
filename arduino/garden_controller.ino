@@ -74,7 +74,7 @@ void loop() {
   root["tempC"] = tempC;
   root["humidity"] = humidity;
 
-  root.prettyPrintTo(Serial);
+  root.printTo(Serial);
   Serial.println();
 
   // Water the garden if there's water in the reservoir and if the moisture content
