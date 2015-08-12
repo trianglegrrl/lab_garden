@@ -1,51 +1,26 @@
-require 'json'
-require 'serialport'
+require 'dotenv'
+require 'slack-notifier'
 
-module GardenArduino
-  extend self
+Dotenv.load
 
-  def current_arduino_data
-    ask_arduino_for_data
+class GardenSlacker
+  def initialize
+    @webhook_url = ENV['SLACK_WEBHOOK_URL'] or raise "Holy fucking shit! No SLACK_WEBHOOK_URL set! You need to create your .env file."
+    @notifier = Slack::Notifier.new @webhook_url
+    @notifier.username = 'The Garden'
+    @notifier.ping "Garden starting up...."
   end
 
-  def ask_arduino_for_data
-    return_hash = Hash.new
-
-    line = read_from_serial_port
-
-    values = line.split("|").compact
-
-    values.map do |v|
-      key_value = v.split '='
-      return_hash[key_value[0]] = key_value[1]
-    end
-
-    return_hash
+  def send_message(message)
+    @notifier.ping message 
+  end
+  
+  def slack_notification_of_empty_reservoir(reservoir_value)
+    send_message "Please fill my reservoir! My current sensor value is #{reservoir_value}."
   end
 
-  private
-  def serial_port
-    #params for serial port
-    baud_rate = 115200
-    data_bits = 8
-    stop_bits = 1
-    parity = SerialPort::NONE
-
-    @serial_port ||= SerialPort.new(serial_device, baud_rate, data_bits, stop_bits, parity)
-  end
-
-  def read_from_serial_port
-    serial_port.flush_input
-
-    serial_port.gets.chomp
-  end
-
-  def serial_device
-    10.times do |time|
-      device_name = "/dev/ttyACM#{time}"
-      if File.exist? device_name
-        return device_name
-      end
-    end
+  def slack_notification_of_full_reservoir(reservoir_value)
+    send_message "My reservoir is full now! My current sensor value is #{reservoir_value}."
   end
 end
+
